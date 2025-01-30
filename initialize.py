@@ -16,10 +16,7 @@ def initialize():
         limit_requests=current_settings["chat_model_rl_requests"],
         limit_input=current_settings["chat_model_rl_input"],
         limit_output=current_settings["chat_model_rl_output"],
-        kwargs={
-            "temperature": current_settings["chat_model_temperature"],
-            **current_settings["chat_model_kwargs"],
-        },
+        kwargs=current_settings["chat_model_kwargs"],
     )
 
     # utility model from user settings
@@ -30,28 +27,28 @@ def initialize():
         limit_requests=current_settings["util_model_rl_requests"],
         limit_input=current_settings["util_model_rl_input"],
         limit_output=current_settings["util_model_rl_output"],
-        kwargs={
-            "temperature": current_settings["util_model_temperature"],
-            **current_settings["util_model_kwargs"],
-        },
+        kwargs=current_settings["util_model_kwargs"],
     )
     # embedding model from user settings
     embedding_llm = ModelConfig(
         provider=models.ModelProvider[current_settings["embed_model_provider"]],
         name=current_settings["embed_model_name"],
-        ctx_length=0,
         limit_requests=current_settings["embed_model_rl_requests"],
-        limit_input=0,
-        limit_output=0,
-        kwargs={
-            **current_settings["embed_model_kwargs"],
-        },
+        kwargs=current_settings["embed_model_kwargs"],
+    )
+    # browser model from user settings
+    browser_llm = ModelConfig(
+        provider=models.ModelProvider[current_settings["browser_model_provider"]],
+        name=current_settings["browser_model_name"],
+        vision=current_settings["browser_model_vision"],
+        kwargs=current_settings["browser_model_kwargs"],
     )
     # agent configuration
     config = AgentConfig(
         chat_model=chat_llm,
         utility_model=utility_llm,
         embeddings_model=embedding_llm,
+        browser_model=browser_llm,
         prompts_subdir=current_settings["agent_prompts_subdir"],
         memory_subdir=current_settings["agent_memory_subdir"],
         knowledge_subdirs=["default", current_settings["agent_knowledge_subdir"]],
